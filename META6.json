@@ -1,5 +1,5 @@
 {
-    "perl" : "6.c",
+    "perl" : "6",
     "name" : "Fortran::Grammar",
     "version" : "0.0.1",
     "description" : "",

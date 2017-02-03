@@ -1,5 +1,5 @@
 #!/usr/bin/env perl6
-use v6.c;
+use v6;
 use Test;
 # use Test::META;
 use lib 'lib';
