@@ -7,7 +7,7 @@
     "provides" : {
         "Fortran::Grammar" : "lib/Fortran/Grammar.pm6"
     },
-    "depends" : [ ],
+    "depends" : [ "Test::META" ],
     "resources" : [ ],
     "source-url" : "git://github.com/nobodyinperson/perl6-fortran-grammar.git"
 }

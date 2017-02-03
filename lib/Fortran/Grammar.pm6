@@ -1,26 +1,38 @@
 use v6;
+# use Grammar::Tracer;
 
 unit module Fortran::Grammar;
     
 grammar FortranFreeForm is export { 
     # regex TOP { :s <value-returning-code> }
-
-    # multiple codelines
-    rule codelines { 
-        [<codeline> <.nl>?]*
+    
+    # Fortran blocks
+    rule program { :s :i
+        ^^ "PROGRAM" <name> <comment>? $$
+        <.nl> <codeline> <.nl>
+        ^^ "END" "PROGRAM" $<name> <comment>? $$
         }
 
-    rule codeline { 
-        ^^ 
+
+    # multiple codelines
+    rule codelines { :s
+        [ <full-codeline> <.nl>? ]*
+        }
+
+    rule full-codeline { 
+        ^^ <codeline> $$
+        }
+
+    rule codeline { :s
         [
-        <empty-line>
+        <comment>
         || <preprocessor-line>
         || <subroutine-call>
         || <not-implemented-code>
         ]
-        $$ }
+        }
     rule not-implemented-code { \N* }
-
+ 
     token comment { "!" \N* $$ }
     token preprocessor-line { ^^ "#" \N* $$ }
     token ws { 
@@ -30,11 +42,10 @@ grammar FortranFreeForm is export {
         <comment> ?
         }
     token nl { \n+ }
-    token empty-line { \h* }
 
     # fortran primitives
-    token variablename { :i <[a..z0..9_]>+ }
-    token precision-spec { _ <variablename> }
+    token name { :i <[a..z0..9_]>+ }
+    token precision-spec { _ <name> }
     token integer { \d+ <precision-spec> ? }
     token float { \d+ [ \. \d+ ]? <precision-spec> ? }
     token number { <float> || <integer> }
@@ -46,10 +57,10 @@ grammar FortranFreeForm is export {
     rule  strings { <string> [ \, <string> ] * }
     rule  numbers { <number> [ \, <number> ] * }
 
-    token array-index { <array-index-region> || <variablename> || <integer> }
+    token array-index { <array-index-region> || <name> || <integer> }
     rule  array-indices { <array-index> [ \, <array-index> ] *  }
-    rule  indexed-array { <variablename> \( <array-indices> \) }
-    rule  accessed-variable { <indexed-array> || <variablename> }
+    rule  indexed-array { <name> \( <array-indices> \) }
+    rule  accessed-variable { <indexed-array> || <name> }
 
     # fortran operators
     # only simple statements are possible
@@ -61,15 +72,15 @@ grammar FortranFreeForm is export {
 
     # token known-index { <integer> || <return-size-one-function-call> }
     # rule  known-indices { <known-index> [ \, <known-index> ] * }
-    # rule  known-indexed-array { <variablename> \( <known-indices> \) }
+    # rule  known-indexed-array { <name> \( <known-indices> \) }
     # token return-size-one-code { <integer> || <float> || 
     #     <known-indexed-array> || <return-size-one-function-call> }
     # token return-size-one-function { size || rank } # function with return size one
     # rule  return-size-one-function-call
     #     { <return-size-one-function> \( <arguments> ? \) }
 
-    rule  function-call { <variablename> \( <arguments> ? \) }
-    rule  subroutine-call { :i call <variablename> [ \( <arguments> ? \) ] ? }
+    rule  function-call { <name> \( <arguments> ? \) }
+    rule  subroutine-call { :i call <name> [ \( <arguments> ? \) ] ? }
 
     rule  value-returning-code { <function-call> || <statement> || <in-place> || <accessed-variable> }
     rule  value-returning-code-no-statement { <function-call> || <in-place> || <accessed-variable> }
