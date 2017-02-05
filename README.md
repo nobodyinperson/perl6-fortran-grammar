@@ -18,3 +18,9 @@ or from the repository root
 ```bash
 panda install .
 ```
+
+## Special thanks
+
+- smls on [StackOverflow.com](http://stackoverflow.com/a/42039566/5433146) for
+  an Action object `FALLBACK` method that converts a `Match` object to a
+  JSON-serializable `Hash`
