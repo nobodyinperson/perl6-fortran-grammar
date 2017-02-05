@@ -46,8 +46,9 @@ grammar FortranFreeForm is export {
     # fortran primitives
     token name { :i <[a..z0..9_]>+ }
     token precision-spec { _ <name> }
-    token integer { \d+ <precision-spec> ? }
-    token float { \d+ [ \. \d+ ]? <precision-spec> ? }
+    token digits { \d+ }
+    token integer { <digits> <precision-spec> ? }
+    token float { <digits> \. <digits>  <precision-spec> ? }
     token number { <float> || <integer> }
     rule  string { [ '"' <-["]>* '"' ] || [ "'" <-[']>* "'" ] }
     token atomic { <number> || <string> }
@@ -57,7 +58,7 @@ grammar FortranFreeForm is export {
     rule  strings { <string> [ \, <string> ] * }
     rule  numbers { <number> [ \, <number> ] * }
 
-    token array-index { <array-index-region> || <name> || <integer> }
+    token array-index { <array-index-region> || <integer> || <name> }
     rule  array-indices { <array-index> [ \, <array-index> ] *  }
     rule  indexed-array { <name> \( <array-indices> \) }
     rule  accessed-variable { <indexed-array> || <name> }
@@ -65,7 +66,9 @@ grammar FortranFreeForm is export {
     # fortran operators
     # only simple statements are possible
     token operator { <[-+*/]> || '**' }
-    rule statement { <value-returning-code-no-statement> <operator> <value-returning-code-no-statement> }
+    rule statement { 
+        <value-returning-code-no-statement> 
+        [ <operator> <value-returning-code-no-statement> ] * }
 
     token argument { <value-returning-code> } # any value returning code can be an argument
     rule  arguments { <argument> [ \, <argument> ] * } # a list of arguments
@@ -82,7 +85,7 @@ grammar FortranFreeForm is export {
     rule  function-call { <name> \( <arguments> ? \) }
     rule  subroutine-call { :i call <name> [ \( <arguments> ? \) ] ? }
 
-    rule  value-returning-code { <function-call> || <statement> || <in-place> || <accessed-variable> }
+    rule  value-returning-code { <function-call> || <in-place> || <accessed-variable> || <statement> }
     rule  value-returning-code-no-statement { <function-call> || <in-place> || <accessed-variable> }
     }
 
