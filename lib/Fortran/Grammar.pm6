@@ -49,8 +49,9 @@ grammar FortranFreeForm is export {
     token digits { \d+ }
     token integer { <digits> <precision-spec> ? }
     token float { <digits> \. <digits>  <precision-spec> ? }
-    token number { <float> || <integer> }
+    token number { <sign>? [ <float> || <integer> ] }
     rule  string { [ '"' <-["]>* '"' ] || [ "'" <-[']>* "'" ] }
+    rule  sign { <[-+]> }
     token atomic { <number> || <string> }
     rule  in-place-array { \( \/ [ <strings> || <numbers> ] \/ \) }
     token array-index-region { <value-returning-code> ? \: <value-returning-code> ? }
@@ -61,7 +62,7 @@ grammar FortranFreeForm is export {
     token array-index { <array-index-region> || <integer> || <name> }
     rule  array-indices { <array-index> [ \, <array-index> ] *  }
     rule  indexed-array { <name> \( <array-indices> \) }
-    rule  accessed-variable { <indexed-array> || <name> }
+    rule  accessed-variable { <sign>? [ <indexed-array> || <name> ] }
 
     # fortran operators
     # only simple statements are possible
