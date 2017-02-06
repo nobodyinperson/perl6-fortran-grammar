@@ -48,7 +48,12 @@ for @sourcefiles -> $sourcefile {
     # say "match.made: ", $match.made;
     my $description = [$bnmatch<rule>,$bnmatch<ident>].join;
     # test
-    is $match.made, $expected, $description;
+    my $made;
+    try {
+        CATCH { default { $made = {}; } }
+        $made = $match.made;
+        }
+    is $made, $expected, $description;
     }
 
 done-testing;

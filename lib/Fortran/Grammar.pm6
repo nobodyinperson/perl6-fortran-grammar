@@ -6,16 +6,8 @@ unit module Fortran::Grammar;
 grammar FortranFreeForm is export { 
     # regex TOP { :s <value-returning-code> }
     
-    # Fortran blocks
-    rule program { :s :i
-        ^^ "PROGRAM" <name> <comment>? $$
-        <.nl> <codeline> <.nl>
-        ^^ "END" "PROGRAM" $<name> <comment>? $$
-        }
-
-
     # multiple codelines
-    rule codelines { :s
+    rule codelines {
         [ <full-codeline> <.nl>? ]*
         }
 
@@ -23,7 +15,7 @@ grammar FortranFreeForm is export {
         ^^ <codeline> $$
         }
 
-    rule codeline { :s
+    rule codeline {
         [
         <comment>
         || <preprocessor-line>
