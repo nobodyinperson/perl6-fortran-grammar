@@ -15,7 +15,12 @@ sub MAIN (Str :$rule = "codelines", Bool :$json = False) {
     my $m = Fortran::Grammar::FortranFreeForm.parse: $input, 
         rule => $rule, actions => Fortran::Grammar::Test::TestActions.new;
     if $json { 
-        say to-json $m.made;
+        try {
+            CATCH { 
+                default { say to-json {} }
+                }
+            say to-json $m.made;
+            }
         }
     else { 
         say $m;
