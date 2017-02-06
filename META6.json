@@ -1,7 +1,7 @@
 {
     "perl" : "6",
     "name" : "Fortran::Grammar",
-    "version" : "0.0.2",
+    "version" : "0.0.3",
     "description" : "",
     "authors" : [ "Yann Büchau" ],
     "provides" : {
