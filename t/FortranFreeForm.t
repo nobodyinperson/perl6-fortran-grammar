@@ -20,7 +20,7 @@ constant $SRCFOLDER         = "$DATAFOLDER/source";
 constant $EXPECTEDFOLDER    = "$DATAFOLDER/expected";
 
 # find all source files
-my @sourcefiles = glob("$SRCFOLDER/*.f");
+my @sourcefiles = glob("$SRCFOLDER/*.f90");
 
 plan 1 + @sourcefiles.elems;
 
