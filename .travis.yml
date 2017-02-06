@@ -7,4 +7,3 @@ install:
 perl6:
     - latest
     - "2017.01"
-    - "2015.11"
