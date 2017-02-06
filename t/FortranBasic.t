@@ -41,7 +41,7 @@ for @sourcefiles -> $sourcefile {
     # say "source: ", $source;
     my $expected = from-json $expectedfile.slurp; # read expected json
     # say "expected: ", $expected;
-    my $match = Fortran::Grammar::FortranFreeForm.parse: $source, 
+    my $match = Fortran::Grammar::FortranBasic.parse: $source, 
         rule => $bnmatch<rule>, 
         actions => Fortran::Grammar::Test::TestActions.new;
     # say "match: ", $match;

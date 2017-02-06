@@ -3,9 +3,8 @@ use v6;
 
 unit module Fortran::Grammar;
     
-grammar FortranFreeForm is export { 
-    # regex TOP { :s <value-returning-code> }
-    
+# basic Fortran structures
+grammar FortranBasic is export { 
     # multiple codelines
     rule codelines {
         [ <full-codeline> <.nl>? ]*
