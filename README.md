@@ -5,6 +5,29 @@ Perl6 grammar to parse FORTRAN source code
 
 **Note**: This module is still in very early development.
 
+## Motivation
+
+Working on large Fortran projects with lots of code that you haven't written
+yourself and try to understand/debug, I found it to be very handy to have a
+text filter that scans the source code and automatically wraps
+`write(*,*) ...` statements around specific codelines, e.g. specific MPI
+subroutine calls. To get information on this code and fill the 
+`write (*,*) ...` statements with useful information, it has to be parsed.
+
+I initially wrote a Perl5 script to do this by parsing the source code
+line-by-line. Parsing became more and more ugly the stranger the code became ( a
+lot of nested arguments, Fortran-style line continuation with `& \n &`, 
+the code of interest enclosed in `IF`-oneliners, etc...)
+
+When I discovered Perl6 Grammars, I immediately wanted to implement this :-)
+
+The main goal of this module is not to provide a Fortran syntax-checker
+(although with a lot of work it could become one...) but to give painless access
+to the structural components of Fortran statements - e.g. the subroutine name of
+a subroutine call, its arguments (which may contain function calls or
+calculations), etc...
+
+
 ## Usage
 
 Use it like any grammar in Perl6:
