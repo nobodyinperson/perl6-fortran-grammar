@@ -37,7 +37,13 @@ grammar FortranBasic is export {
     rule  indexed-array { <name> \( <array-indices> \) }
     rule  accessed-variable { <sign>? [ <indexed-array> || <name> ] }
 
-    token operator { <[-+*/]> || '**' }
+    proto token operator { <...> }
+    token operator:sym<\+>   { '+' }
+    token operator:sym<\->   { '-' }
+    token operator:sym<\*>   { '*' }
+    token operator:sym<\/>   { '/' }
+    token operator:sym<\*\*> { '**' }
+
     rule statement { 
         <value-returning-code-no-statement> 
         [ <operator> <value-returning-code-no-statement> ] * }
