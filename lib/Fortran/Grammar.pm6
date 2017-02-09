@@ -45,8 +45,7 @@ grammar FortranBasic is export {
     token operator:sym<\*\*> { '**' }
 
     rule statement { 
-        <value-returning-code-no-statement> 
-        [ <operator> <value-returning-code-no-statement> ] * }
+        <value-returning-code> [ <operator> <value-returning-code> ] * }
 
     token argument { <value-returning-code> } # any value returning code can be an argument
     rule  arguments { <argument> [ \, <argument> ] * } # a list of arguments
@@ -55,12 +54,6 @@ grammar FortranBasic is export {
     rule  subroutine-call { :i call <name> [ \( <arguments> ? \) ] ? }
 
     rule  value-returning-code { 
-           <function-call> 
-        || <in-place> 
-        || <accessed-variable> 
-        || <statement>
-        }
-    rule  value-returning-code-no-statement { 
            <function-call> 
         || <in-place> 
         || <accessed-variable> 

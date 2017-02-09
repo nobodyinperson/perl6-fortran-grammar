@@ -1,5 +1,5 @@
 {
-  "value-returning-code-no-statement": [
+  "value-returning-code": [
     {
       "in-place": {
         "atomic": {
