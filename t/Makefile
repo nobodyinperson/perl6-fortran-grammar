@@ -17,7 +17,7 @@ expectedfiles: $(JSONFILES)
 
 $(JSONDIR)/%.$(JSONEXT): $(SOURCEDIR)/%.$(SOURCEEXT)
 	perl6 -I../lib $(PARSER) --json --rule=$$(basename $< | perl -pe 's/([^_]+)(?:_.*?)?\.\w+$$/$$1/') < $< > $@
-	vim -O $< $@
+	# vim -O $< $@
 
 .PHONY: clean
 clean:

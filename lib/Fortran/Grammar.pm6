@@ -26,9 +26,9 @@ grammar FortranBasic is export {
     rule  string { [ '"' <-["]>* '"' ] || [ "'" <-[']>* "'" ] }
     rule  sign { <[-+]> }
 
-    proto token boolean { * }
-    token boolean:sym<true>  { :i '.true.' }
-    token boolean:sym<false> { :i '.false.' }
+    proto rule boolean { * }
+    rule boolean:sym<true>  { :i <logical-prefix-operator> ? '.true.' }
+    rule boolean:sym<false> { :i <logical-prefix-operator> ? '.false.' }
 
     token atomic { <boolean> || <number> || <strings> }
 
@@ -62,19 +62,30 @@ grammar FortranBasic is export {
     proto token logical-operator { * }
     token logical-operator:sym<and>            { :i '.and.'   }
     token logical-operator:sym<or>             { :i '.or.'    }
-    # TODO .not. is a prefix operator, not infix
-    # token logical-operator:sym<not>            { :i '.not.'   }
     token logical-operator:sym<equivalent>     { :i '.eqv.'   }
     token logical-operator:sym<non-equivalent> { :i '.neqv.'  }
 
+    proto token logical-prefix-operator { * }
+    token logical-prefix-operator:sym<not> { :i '.not.'   }
+
+    proto rule logical-value-returning-code { * }
+    rule logical-value-returning-code:sym<relational-statement> { 
+        <logical-prefix-operator> ? <relational-statement> }
+    rule logical-value-returning-code:sym<boolean-atomic> { 
+        <boolean> }
+    rule logical-value-returning-code:sym<function-call> { 
+        <function-call> }
+    rule logical-value-returning-code:sym<accessed-variable> { 
+        <accessed-variable> }
+
     # TODO all of the statements are only very basic and need improvement
-    proto rule statement { * }
-    rule statement:sym<arithmetic> { 
-        <value-returning-code> [ <arithmetic-operator> <value-returning-code> ] + }
-    rule statement:sym<relational> { 
-        <value-returning-code> <relational-operator> <value-returning-code> }
-    rule statement:sym<logical> { 
-        <value-returning-code> [ <logical-operator> <value-returning-code> ] + }
+    rule arithmetic-statement { 
+        <value-returning-code> [ <arithmetic-operator> <value-returning-code> ] * }
+    rule relational-statement { 
+        <arithmetic-statement> <relational-operator> <arithmetic-statement> }
+    rule logical-statement { 
+        <logical-value-returning-code> 
+        [ <logical-operator> <logical-value-returning-code> ] * }
 
     rule assignment { <accessed-variable> '=' <value-returning-code> }
 
